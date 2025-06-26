@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova Launcher</title>
+  <link href="./tailwind.min.css" rel="stylesheet">
+  <script src="./gsap.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-black text-white min-h-screen">
+  <div class="container mx-auto p-8">
+    <h1 class="text-6xl font-extrabold text-center mb-10 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-cyan-500 animate-glow">Nova Launcher</h1>
+    <div class="flex justify-center mb-8 space-x-6">
+      <button class="tab px-8 py-4 bg-gray-800 rounded-xl active text-xl font-semibold shadow-lg hover:bg-gray-700 transition-transform transform hover:scale-105" data-tab="library">Library</button>
+      <button class="tab px-8 py-4 bg-gray-800 rounded-xl text-xl font-semibold shadow-lg hover:bg-gray-700 transition-transform transform hover:scale-105" data-tab="epic">Epic Store</button>
+      <button class="tab px-8 py-4 bg-gray-800 rounded-xl text-xl font-semibold shadow-lg hover:bg-gray-700 transition-transform transform hover:scale-105" data-tab="gog">GOG Store</button>
+      <button class="tab px-8 py-4 bg-gray-800 rounded-xl text-xl font-semibold shadow-lg hover:bg-gray-700 transition-transform transform hover:scale-105" data-tab="web3">Web3 Store</button>
+      <button class="tab px-8 py-4 bg-gray-800 rounded-xl text-xl font-semibold shadow-lg hover:bg-gray-700 transition-transform transform hover:scale-105" data-tab="proton">Proton Manager</button>
+    </div>
+    <div id="loading-spinner" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="w-16 h-16 border-4 border-t-pink-500 border-gray-700 rounded-full animate-spin"></div>
+    </div>
+    <div id="error-log" class="hidden fixed bottom-4 left-4 right-4 bg-red-600 text-white p-4 rounded-lg shadow-lg"></div>
+    <div id="library" class="tab-content">
+      <div class="flex flex-col sm:flex-row items-center mb-8 space-x-4 space-y-4 sm:space-y-0">
+        <div class="flex items-center space-x-2">
+          <label for="proton-select" class="text-lg font-medium">Proton Version:</label>
+          <select id="proton-select" class="bg-gray-700 text-white p-3 rounded-lg w-48"></select>
+        </div>
+        <div class="flex items-center space-x-2">
+          <label for="platform-filter" class="text-lg font-medium">Filter:</label>
+          <select id="platform-filter" class="bg-gray-700 text-white p-3 rounded-lg w-32">
+            <option value="">All</option>
+            <option value="Epic">Epic</option>
+            <option value="GOG">GOG</option>
+            <option value="Web3">Web3</option>
+          </select>
+        </div>
+        <input id="game-search" type="text" placeholder="Search games..." class="bg-gray-700 text-white p-3 rounded-lg w-full sm:w-64">
+        <button id="connect-wallet" class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-3 rounded-lg">Connect Wallet</button>
+        <span id="wallet-status" class="text-lg">Wallet: Disconnected</span>
+      </div>
+      <div id="game-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    </div>
+    <div id="epic" class="tab-content hidden text-center">
+      <button id="login-epic" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-lg mb-4 text-xl font-semibold">Login to Epic Games</button>
+      <button class="store-link bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-lg text-xl font-semibold" data-store="epic">Open Epic Store</button>
+    </div>
+    <div id="gog" class="tab-content hidden text-center">
+      <button id="login-gog" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-lg mb-4 text-xl font-semibold">Login to GOG</button>
+      <button class="store-link bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-lg text-xl font-semibold" data-store="gog">Open GOG Store</button>
+    </div>
+    <div id="web3" class="tab-content hidden">
+      <div class="text-center mb-6">
+        <button class="store-link bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-lg text-xl font-semibold" data-store="web3">Open Web3 Store</button>
+      </div>
+      <div id="web3-games" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    </div>
+    <div id="proton" class="tab-content hidden">
+      <div id="proton-progress" class="hidden text-center text-lg mb-4 text-cyan-400"></div>
+      <div id="proton-manager-list" class="space-y-4"></div>
+    </div>
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>
