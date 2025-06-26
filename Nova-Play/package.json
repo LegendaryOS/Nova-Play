@@ -1,0 +1,11 @@
+{
+  "name": "nova-launcher",
+  "version": "1.0.4",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^31.3.1"
+  }
+}
