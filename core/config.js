@@ -16,9 +16,9 @@ function loadSettings() {
     steamId: '',
     itchApiKey: '',
     syncInterval: 3600000,
-    epicAccounts: [], // Array of Epic account IDs
-    gameOptions: {}, // Per-game launch options
-    controllerMappings: {} // Controller configurations
+    epicAccounts: [],
+    gameOptions: {},
+    controllerMappings: {}
   };
 }
 
