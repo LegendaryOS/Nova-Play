@@ -2,6 +2,7 @@
   "name": "nova-play",
   "version": "1.0.0",
   "main": "main.js",
+  "license": "GPL-3.0",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --linux"
@@ -14,7 +15,10 @@
     "node-fetch": "^3.3.2",
     "tar": "^6.2.1",
     "adm-zip": "^0.5.10",
-    "electron-webview": "^1.0.1"
+    "electron-webview": "^1.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "electron-log": "^5.2.0"
   },
   "devDependencies": {
     "electron-builder": "^24.13.3"
