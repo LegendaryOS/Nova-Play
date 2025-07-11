@@ -28,6 +28,7 @@
     <div class="main-content">
       <div class="tabs">
         <button class="tab active" onclick="switchTab('library')">Library</button>
+        <button class="tab" onclick="switchTab('store')">Store</button>
         <button class="tab" onclick="switchTab('proton')">Proton Manager</button>
         <button class="tab" onclick="switchTab('settings')">Settings</button>
       </div>
@@ -35,6 +36,17 @@
         <h2>Games</h2>
         <input type="text" id="search-games" placeholder="Search games...">
         <div id="games-list" class="games-grid"></div>
+      </div>
+      <div id="store" class="tab-content hidden">
+        <h2>Store</h2>
+        <div class="store-list">
+          <button onclick="loadStore('https://store.epicgames.com')">Epic Games Store</button>
+          <button onclick="loadStore('https://www.ea.com')">EA Store</button>
+          <button onclick="loadStore('https://store.steampowered.com')">Steam Store</button>
+          <button onclick="loadStore('https://www.gog.com')">GOG Shop</button>
+          <button onclick="loadStore('https://hyperplay.xyz')">HyperPlay Shop</button>
+        </div>
+        <webview id="store-webview" class="store-webview" src=""></webview>
       </div>
       <div id="proton" class="tab-content hidden">
         <h2>Proton Manager</h2>
@@ -59,6 +71,8 @@
           <input type="text" name="steamId" placeholder="Enter Steam ID">
           <label>itch.io API Key:</label>
           <input type="text" name="itchApiKey" placeholder="Enter itch.io API Key">
+          <label>Epic Accounts (comma-separated):</label>
+          <input type="text" name="epicAccounts" placeholder="account1,account2">
           <label>Sync Interval (ms):</label>
           <input type="number" name="syncInterval" placeholder="3600000">
           <button type="submit">Save</button>
@@ -81,6 +95,7 @@
   <script src="components/GameCard.js"></script>
   <script src="components/Sidebar.js"></script>
   <script src="components/Modal.js"></script>
+  <script src="components/Store.js"></script>
   <script src="renderer.js"></script>
 </body>
 </html>
