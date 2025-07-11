@@ -4,98 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nova Play</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dist/styles.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="nova-menu">
-        <button id="nova-menu-btn">☰ Nova Play</button>
-        <div class="nova-menu-dropdown hidden">
-          <button onclick="systemAction('shutdown')">Shut Down</button>
-          <button onclick="systemAction('restart')">Restart</button>
-          <button onclick="systemAction('logout')">Log Out</button>
-          <button onclick="systemAction('quit')">Quit App</button>
-          <button onclick="systemAction('restartApp')">Restart App</button>
-        </div>
-      </div>
-      <h2>Library</h2>
-      <ul id="library-list"></ul>
-    </div>
-
-    <!-- Main Workspace -->
-    <div class="main-content">
-      <div class="tabs">
-        <button class="tab active" onclick="switchTab('library')">Library</button>
-        <button class="tab" onclick="switchTab('store')">Store</button>
-        <button class="tab" onclick="switchTab('proton')">Proton Manager</button>
-        <button class="tab" onclick="switchTab('settings')">Settings</button>
-      </div>
-      <div id="library" class="tab-content active">
-        <h2>Games</h2>
-        <input type="text" id="search-games" placeholder="Search games...">
-        <div id="games-list" class="games-grid"></div>
-      </div>
-      <div id="store" class="tab-content hidden">
-        <h2>Store</h2>
-        <div class="store-list">
-          <button onclick="loadStore('https://store.epicgames.com')">Epic Games Store</button>
-          <button onclick="loadStore('https://www.ea.com')">EA Store</button>
-          <button onclick="loadStore('https://store.steampowered.com')">Steam Store</button>
-          <button onclick="loadStore('https://www.gog.com')">GOG Shop</button>
-          <button onclick="loadStore('https://hyperplay.xyz')">HyperPlay Shop</button>
-        </div>
-        <webview id="store-webview" class="store-webview" src=""></webview>
-      </div>
-      <div id="proton" class="tab-content hidden">
-        <h2>Proton Manager</h2>
-        <button onclick="refreshProtons()">Refresh Protons</button>
-        <ul id="proton-list"></ul>
-      </div>
-      <div id="settings" class="tab-content hidden">
-        <h2>Settings</h2>
-        <form id="settings-form">
-          <label>Theme:</label>
-          <select name="theme">
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
-          </select>
-          <label>Game Path:</label>
-          <input type="text" name="gamePath" placeholder="/path/to/games">
-          <label>Default Proton:</label>
-          <select name="protonVersion" id="proton-version"></select>
-          <label>Steam API Key:</label>
-          <input type="text" name="steamApiKey" placeholder="Enter Steam API Key">
-          <label>Steam ID:</label>
-          <input type="text" name="steamId" placeholder="Enter Steam ID">
-          <label>itch.io API Key:</label>
-          <input type="text" name="itchApiKey" placeholder="Enter itch.io API Key">
-          <label>Epic Accounts (comma-separated):</label>
-          <input type="text" name="epicAccounts" placeholder="account1,account2">
-          <label>Sync Interval (ms):</label>
-          <input type="number" name="syncInterval" placeholder="3600000">
-          <button type="submit">Save</button>
-        </form>
-        <div id="logs" class="logs"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Login Modal -->
-  <div id="login-modal" class="modal hidden">
-    <div class="modal-content">
-      <h2>Login to <span id="login-platform"></span></h2>
-      <button onclick="authPlatform()">Authenticate</button>
-      <button onclick="closeModal()">Cancel</button>
-    </div>
-  </div>
-
+  <div id="root"></div>
   <script src="https://cdn.jsdelivr.net/npm/web3@4.3.0/dist/web3.min.js"></script>
-  <script src="components/GameCard.js"></script>
-  <script src="components/Sidebar.js"></script>
-  <script src="components/Modal.js"></script>
-  <script src="components/Store.js"></script>
-  <script src="renderer.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/framer-motion@10.12.16/dist/framer-motion.js"></script>
+  <script src="renderer.jsx"></script>
 </body>
 </html>
