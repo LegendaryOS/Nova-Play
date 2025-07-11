@@ -1,0 +1,17 @@
+{
+  "name": "nova-play",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^28.2.2",
+    "electron-store": "^8.1.0",
+    "axios": "^1.7.2",
+    "web3": "^4.3.0",
+    "node-fetch": "^3.3.2",
+    "tar": "^6.2.1",
+    "adm-zip": "^0.5.10"
+  }
+}
