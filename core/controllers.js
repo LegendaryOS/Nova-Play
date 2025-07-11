@@ -1,15 +1,18 @@
 const { exec } = require('child_process').promisify;
+const log = require('electron-log');
 
 async function detectControllers() {
   try {
     const output = await exec('ls /dev/input/js*');
-    return output.split('\n').map(device => ({
+    const controllers = output.split('\n').map(device => ({
       id: device,
       name: `Controller ${device}`,
-      mappings: {} // Add mapping logic if needed
+      mappings: {} // SDL2 mappings placeholder
     }));
+    log.info(`Detected ${controllers.length} controllers`);
+    return controllers;
   } catch (error) {
-    console.error('Controller detection error:', error.message);
+    log.error(`Controller detection error: ${error.message}`);
     return [];
   }
 }
