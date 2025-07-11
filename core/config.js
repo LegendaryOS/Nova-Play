@@ -15,6 +15,7 @@ function loadSettings() {
     steamApiKey: '',
     steamId: '',
     itchApiKey: '',
+    eaAppPath: '', // Path to EA App/Origin
     syncInterval: 3600000,
     epicAccounts: [],
     gameOptions: {},
