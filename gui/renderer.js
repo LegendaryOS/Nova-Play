@@ -1,5 +1,5 @@
 const { electronAPI } = window;
-let web3, accounts;
+let web3, accounts, gameOptions = {};
 
 // Initialize Web3
 async function initWeb3() {
@@ -50,26 +50,29 @@ async function loadLibraries() {
   const libraries = await electronAPI.invoke('get-libraries');
   renderLibraryList(libraries, loadGames);
   if (libraries.length > 0) loadGames(libraries[0].platform);
+  loadNotifications();
 }
 
 // Load games for a platform
 async function loadGames(platform) {
   const libraries = await electronAPI.invoke('get-libraries');
-  const games = libraries.find(lib => lib.platform === platform).games;
+  const protons = await electronAPI.invoke('get-protons');
   const settings = await electronAPI.invoke('load-settings');
+  const games = libraries.find(lib => lib.platform === platform).games;
   const gamesList = document.getElementById('games-list');
-  gamesList.innerHTML = games.map(game => renderGameCard(game, settings.protonVersion)).join('');
+  gamesList.innerHTML = games.map(game => renderGameCard(game, protons, settings.protonVersion)).join('');
 }
 
 // Search games
 document.getElementById('search-games').addEventListener('input', async (e) => {
   const query = e.target.value.toLowerCase();
   const libraries = await electronAPI.invoke('get-libraries');
+  const protons = await electronAPI.invoke('get-protons');
+  const settings = await electronAPI.invoke('load-settings');
   const allGames = libraries.flatMap(lib => lib.games);
   const filteredGames = allGames.filter(game => game.title.toLowerCase().includes(query));
-  const settings = await electronAPI.invoke('load-settings');
   const gamesList = document.getElementById('games-list');
-  gamesList.innerHTML = filteredGames.map(game => renderGameCard(game, settings.protonVersion)).join('');
+  gamesList.innerHTML = filteredGames.map(game => renderGameCard(game, protons, settings.protonVersion)).join('');
 });
 
 // Load Proton versions
@@ -84,8 +87,8 @@ async function loadProtons() {
 
   const protonSelect = document.getElementById('proton-version');
   protonSelect.innerHTML = '<option value="">None</option>' + protons
-    .filter(proton => proton.installed)
-    .map(proton => `<option value="${proton.version}">${proton.version}</option>`)
+    .filter(p => p.installed)
+    .map(p => `<option value="${p.version}">${p.version}</option>`)
     .join('');
 }
 
@@ -101,7 +104,7 @@ async function downloadProton(version, url) {
   try {
     const result = await electronAPI.invoke('download-proton', version, url);
     if (result.success) {
-      logMessage(`${version} downloaded and extracted successfully!`);
+      logMessage(`${version} downloaded and extracted successfully!');
       await loadProtons();
     } else {
       logError(`Failed to download ${version}: ${result.error}`);
@@ -112,14 +115,17 @@ async function downloadProton(version, url) {
 }
 
 // Launch game
-async function launchGame(appid, platform, protonVersion) {
-  if (!protonVersion) {
-    logError('Please select a default Proton version in Settings.');
+async function launchGame(appid, platform) {
+  const settings = await electronAPI.invoke('load-settings');
+  const options = gameOptions[appid] || {};
+  const protonVersion = options.protonVersion || settings.protonVersion;
+  if (!protonVersion && !options.useNative) {
+    logError('Please select a default Proton version or native mode.');
     return;
   }
-  logMessage(`Launching ${appid} on ${platform} with ${protonVersion}...`);
+  logMessage(`Launching ${appid} on ${platform} with ${protonVersion || 'native'}...`);
   try {
-    const result = await electronAPI.invoke('launch-game', appid, platform, protonVersion);
+    const result = await electronAPI.invoke('launch-game', appid, platform, protonVersion, options);
     if (result.success) {
       logMessage('Game launched successfully!');
     } else {
@@ -128,6 +134,59 @@ async function launchGame(appid, platform, protonVersion) {
   } catch (error) {
     logError(`Launch error: ${error.message}`);
   }
+}
+
+// Install game
+async function installGame(appid, platform) {
+  logMessage(`Installing ${appid} on ${platform}...`);
+  try {
+    const result = await electronAPI.invoke('install-game', appid, platform);
+    if (result.success) {
+      logMessage(`Installed ${appid} successfully!`);
+      loadLibraries();
+    } else {
+      logError(`Failed to install ${appid}: ${result.error}`);
+    }
+  } catch (error) {
+    logError(`Install error: ${error.message}`);
+  }
+}
+
+// Update game
+async function updateGame(appid, platform) {
+  logMessage(`Updating ${appid} on ${platform}...`);
+  try {
+    const result = await electronAPI.invoke('update-game', appid, platform);
+    if (result.success) {
+      logMessage(`Updated ${appid} successfully!`);
+      loadLibraries();
+    } else {
+      logError(`Failed to update ${appid}: ${result.error}`);
+    }
+  } catch (error) {
+    logError(`Update error: ${error.message}`);
+  }
+}
+
+// Update game options
+async function updateGameOptions(appid, protonVersion, launchOptions) {
+  gameOptions[appid] = { ...gameOptions[appid], protonVersion, launchOptions };
+  const settings = await electronAPI.invoke('load-settings');
+  settings.gameOptions = gameOptions;
+  await electronAPI.invoke('save-settings', settings);
+  logMessage(`Updated options for ${appid}`);
+}
+
+// Load notifications
+async function loadNotifications() {
+  const notifications = await electronAPI.invoke('get-notifications');
+  notifications.forEach(n => logMessage(`${n.platform}: ${n.message}`));
+}
+
+// Load controllers
+async function loadControllers() {
+  const controllers = await electronAPI.invoke('detect-controllers');
+  controllers.forEach(c => logMessage(`Detected controller: ${c.name}`));
 }
 
 // Load settings
@@ -140,7 +199,9 @@ async function loadSettings() {
   form.steamApiKey.value = settings.steamApiKey || '';
   form.steamId.value = settings.steamId || '';
   form.itchApiKey.value = settings.itchApiKey || '';
+  form.epicAccounts.value = settings.epicAccounts.join(',') || '';
   form.syncInterval.value = settings.syncInterval || 3600000;
+  gameOptions = settings.gameOptions || {};
   document.body.className = settings.theme || 'dark';
 }
 
@@ -154,7 +215,9 @@ document.getElementById('settings-form').addEventListener('submit', async (e) =>
     steamApiKey: e.target.steamApiKey.value,
     steamId: e.target.steamId.value,
     itchApiKey: e.target.itchApiKey.value,
-    syncInterval: parseInt(e.target.syncInterval.value)
+    epicAccounts: e.target.epicAccounts.value.split(',').map(a => a.trim()).filter(a => a),
+    syncInterval: parseInt(e.target.syncInterval.value),
+    gameOptions
   };
   await electronAPI.invoke('save-settings', settings);
   document.body.className = settings.theme;
@@ -202,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadLibraries();
   loadProtons();
   loadSettings();
+  loadControllers();
   startAutoSync();
   ['Steam', 'Epic', 'GOG', 'itch.io', 'Web3'].forEach(platform => {
     electronAPI.invoke('auth-platform', platform).then(result => {
