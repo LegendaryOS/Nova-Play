@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const fs = require('fs').promises;
+const fs = require('fs').promisify;
+const log = require('electron-log');
 const { authPlatform } = require('./core/auth');
 const { getLibraries, installGame, updateGame } = require('./core/games');
 const { launchGame } = require('./core/games/launcher');
@@ -12,6 +13,9 @@ const { detectControllers } = require('./core/controllers');
 
 const protonDir = path.join(app.getPath('userData'), 'protons');
 const configDir = path.join(app.getPath('userData'), 'config');
+
+log.initialize();
+log.transports.file.resolvePath = () => path.join(configDir, 'logs/main.log');
 
 // Create main window
 function createWindow() {
@@ -28,7 +32,7 @@ function createWindow() {
   });
 
   win.loadFile('gui/index.html');
-  // win.webContents.openDevTools(); // Uncomment for debugging
+  // win.webContents.openDevTools();
 }
 
 app.whenReady().then(async () => {
@@ -45,7 +49,11 @@ app.on('window-all-closed', () => {
 });
 
 // IPC Handlers
-ipcMain.handle('auth-platform', async (event, platform) => authPlatform(platform));
+ipcMain.handle('auth-platform', async (event, platform) => {
+  const result = await authPlatform(platform);
+  log.info(`Auth ${platform}: ${result.success ? 'Success' : result.error}`);
+  return result;
+});
 ipcMain.handle('get-libraries', async () => getLibraries());
 ipcMain.handle('get-protons', async () => getProtons());
 ipcMain.handle('download-proton', async (event, version, url) => downloadProton(version, url));
