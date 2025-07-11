@@ -1,0 +1,339 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background: #0f1419;
+  color: #e6e6e6;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 300px;
+  background: #1a1e24;
+  padding: 20px;
+  border-right: 1px solid #2a2e33;
+  overflow-y: auto;
+}
+
+.nova-menu {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+#nova-menu-btn {
+  background: linear-gradient(135deg, #007bff, #00b7ff);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#nova-menu-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.nova-menu-dropdown {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  background: #2a2e33;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  z-index: 10;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nova-menu-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: none;
+  color: #e6e6e6;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.nova-menu-dropdown button:hover {
+  background: #3a3e44;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: #0f1419;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 12px 24px;
+  background: #2a2e33;
+  border: none;
+  color: #e6e6e6;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.tab.active, .tab:hover {
+  background: linear-gradient(135deg, #007bff, #00b7ff);
+  transform: scale(1.02);
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+#search-games {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  background: #2a2e33;
+  border: 1px solid #3a3e44;
+  color: #e6e6e6;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.game-card {
+  background: #2a2e33;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.game-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.game-card-content {
+  padding: 10px;
+}
+
+.game-card-content h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.game-card-content p {
+  font-size: 12px;
+  color: #a0a0a0;
+}
+
+.game-card-content button {
+  background: linear-gradient(135deg, #28a745, #34c759);
+  color: #fff;
+  border: none;
+  padding: 8px;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.game-card-content button:hover {
+  background: linear-gradient(135deg, #218838, #2db84e);
+}
+
+#proton-list {
+  list-style: none;
+}
+
+#proton-list li {
+  padding: 12px;
+  background: #2a2e33;
+  margin: 8px 0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s;
+}
+
+#proton-list li:hover {
+  background: #3a3e44;
+}
+
+#proton-list li button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#proton-list li button:hover {
+  background: #0056b3;
+}
+
+#settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 500px;
+}
+
+#settings-form label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+#settings-form input, #settings-form select {
+  padding: 12px;
+  background: #2a2e33;
+  border: 1px solid #3a3e44;
+  color: #e6e6e6;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+#settings-form button {
+  background: linear-gradient(135deg, #007bff, #00b7ff);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+#settings-form button:hover {
+  background: linear-gradient(135deg, #0056b3, #0096d6);
+}
+
+.logs {
+  margin-top: 20px;
+  padding: 15px;
+  background: #2a2e33;
+  border-radius: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 12px;
+  color: #a0a0a0;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: #2a2e33;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.modal-content button:first-child {
+  background: linear-gradient(135deg, #007bff, #00b7ff);
+  color: #fff;
+}
+
+.modal-content button:last-child {
+  background: linear-gradient(135deg, #dc3545, #ff4560);
+  color: #fff;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Light theme */
+body.light {
+  background: #f5f6f5;
+  color: #1a1e24;
+}
+
+body.light .sidebar, body.light .modal-content {
+  background: #e0e0e0;
+  border-right: 1px solid #ccc;
+}
+
+body.light .tab, body.light #library-list li, body.light #proton-list li, body.light .game-card, body.light .logs {
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+body.light #search-games, body.light #settings-form input, body.light #settings-form select {
+  background: #fff;
+  border: 1px solid #ccc;
+  color: #1a1e24;
+}
